@@ -1,0 +1,6 @@
+bank:bank_main.o bankLib.o
+        cc bank_main.o bankLib.o -o bank
+bank_main.o:bank_main.c
+        cc -c bank_main.c
+bankLib.o:bankLib.c
+        cc -c bankLib.c
