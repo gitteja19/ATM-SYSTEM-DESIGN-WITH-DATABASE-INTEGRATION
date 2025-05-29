@@ -1,0 +1,7 @@
+
+atm:atm_main.o atmLib.o
+        cc atm_main.o atmLib.o -o atm
+atm_main.o:atm_main.c
+        cc -c atm_main.c
+atmLib.o:atmLib.c
+        cc -c atmLib.c
