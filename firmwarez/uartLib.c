@@ -1,19 +1,18 @@
 #include <lpc214x.h> // Include LPC214x specific header for Special Function Registers (SFRs)
 #include "types.h"   // Custom type definitions
 #include "uartLib.h" // UART library header
+#include "atmLib.h"
 
 /**
- * @brief Initializes the specified UART unit (UART0 or UART1) for communication.
+ * @brief Initializes the specified UART unit (UART0 and UART1) for communication.
  *
  * This function configures the necessary PINSEL registers for UART TX/RX pins,
  * sets the Line Control Register (LCR) for 8-bit word length and enables DLAB
  * to access Divisor Latch Registers (DLL/DLM) for baud rate setting.
  * Finally, DLAB is cleared to enable normal operation.
  *
- * @param un The UART unit number (0 for UART0, 1 for UART1).
  */
-void initUART(u8 un){
-	if(un){ // If UART1 is selected (un = 1)
+void initUART(void){
 		// Configure P0.8 (U1TX) and P0.9 (U1RX) for UART1 function.
 		// PINSEL0 controls P0.0-P0.15. Each pin has 2 bits.
 		// U1TX is P0.8, so its bits are (8*2) = 16 and 17.
@@ -25,7 +24,6 @@ void initUART(u8 un){
 		U1DLL = DVSR;                           // Set Divisor Latch Low (DLL) register for baud rate
 		U1DLM = DVSR>>8;                        // Set Divisor Latch High (DLM) register for baud rate
 		U1LCR&= ~(1<<UART_DLAB);                // Clear DLAB (bit 7) to disable access to DLL/DLM and enable normal operation
-	}else{ // If UART0 is selected (un = 0)
 		// Configure P0.0 (U0TX) and P0.1 (U0RX) for UART0 function.
 		// (5) directly corresponds to setting P0.0 and P0.1 to Function 01 (UART0 Tx/Rx).
 		PINSEL0=((PINSEL0&~0xF)|5); // Clear current settings for U0TX/U0RX, then set to UART0 function
@@ -34,7 +32,13 @@ void initUART(u8 un){
 		U0DLL = DVSR;                           // Set Divisor Latch Low (DLL) register for baud rate
 		U0DLM = DVSR>>8;                        // Set Divisor Latch High (DLM) register for baud rate
 		U0LCR&= ~(1<<UART_DLAB);                // Clear DLAB (bit 7) to disable access to DLL/DLM and enable normal operation
-	}
+#ifdef UART_INT
+		VICIntSelect = 0; 		// IRQ
+		VICVectAddr0 = (unsigned)UART0_isr;
+		VICVectCntl0 = 0x20 | 6;  	//UART0 Interrupt
+		VICIntEnable = 1 << 6;   	// Enable UART0 Interrupt 
+		U0IER = 0x01;       		// Enable UART0 RDA Interrupts 
+#endif
 }
 
 /**
