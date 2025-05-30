@@ -40,7 +40,7 @@
  * Configures pin selection, baud rate, and 8-bit word length.
  * @param un The UART unit number (0 for UART0, 1 for UART1).
  */
-void initUART(u8 un);
+void initUART(void);
 
 /**
  * @brief Transmits a single byte via the specified UART unit.
