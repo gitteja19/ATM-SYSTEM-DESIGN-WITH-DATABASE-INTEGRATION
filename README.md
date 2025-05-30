@@ -23,7 +23,7 @@ This component simulates the backend logic of an ATM, including:
 - Balance check  
 - Withdrawal and deposit simulation  
 - Interaction with stored data files  
-- Designed to run in a Linux environment using the `make` build system  
+- Designed to run in a Linux environment using the `makeAtm` build system  
 
 Run this to simulate ATM operation from a terminal.
 
@@ -43,7 +43,7 @@ Run this to simulate ATM operation from a terminal.
   - Transaction logs
   - Balance database
 - Also simulates backend DB interactions
-- Intended to run in Linux using `make`
+- Intended to run in Linux using `makeBank`
 
 ### ⚙️ dataz/ – Database
 
@@ -72,12 +72,6 @@ Run this to simulate ATM operation from a terminal.
 
 Click **Code > Download ZIP** and unzip.
 
-Or use terminal:
-
-    wget https://github.com/<your-username>/<your-repo>/archive/refs/heads/main.zip
-    unzip main.zip
-    cd <your-repo>-main/majorz
-
 ### 2. Install Build Tools
 
 Make sure you have `make` and `gcc`.
@@ -94,16 +88,16 @@ Arch:
 ### 3. Compile and Run ATM Backend
 
     cd atmz
-    make
+    make -f makeAtm
     ./atm
 
 ### 4. Compile and Run Bank Application
 
     cd ../bankz
-    make
-    ./bankz
+    make -f makeBank
+    ./bank
 
-### 5. (Optional) Load Firmware to LPC2148
+### 5. Load Firmware to LPC2148
 
 If using real hardware:
 
